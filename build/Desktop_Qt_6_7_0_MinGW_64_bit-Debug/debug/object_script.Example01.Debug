@@ -1,0 +1,14 @@
+debug/GridObject.o
+debug/KeyboardMouseHandler.o
+debug/OpenGLException.o
+debug/OpenGLWindow.o
+debug/SceneView.o
+debug/ShaderProgram.o
+debug/TestDialog.o
+debug/Transform3D.o
+debug/cube.o
+debug/main.o
+debug/qrc_resources.o
+debug/moc_OpenGLWindow.o
+debug/moc_TestDialog.o
+debug/moc_cube.o
