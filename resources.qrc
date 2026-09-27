@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/grid.vert</file>
+        <file>shaders/simple.frag</file>
+        <file>shaders/withWorldAndCamera.vert</file>
+        <file>shaders/grid.frag</file>
+        <file>shaders/cube.frag</file>
+        <file>shaders/cube.vert</file>
+    </qresource>
+</RCC>
