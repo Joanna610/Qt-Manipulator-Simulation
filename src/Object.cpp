@@ -4,10 +4,6 @@
 #include <QOpenGLShaderProgram>
 #include <vector>
 
-Object::Object()
-{
-}
-
 /************************************************************************************
 
 OpenGL with Qt - Tutorial
@@ -19,13 +15,14 @@ License    : BSD License,
 
 ************************************************************************************/
 
-void Object::create(QOpenGLShaderProgram *shaderProgramm)
+Object::Object(const QVector3D& size, const QVector3D& position) : isShaderSet(false)
 {
     // Model transformation
     m_modelMatrix.setToIdentity();
 
     // The camera is quite far away, so make the cube large for testing.
-    m_modelMatrix.scale(100.0f);
+    m_modelMatrix.scale(size);
+    m_modelMatrix.translate(position);
 
     // Create Vertex Array Object
     m_vao.create();
@@ -34,10 +31,14 @@ void Object::create(QOpenGLShaderProgram *shaderProgramm)
     // Create vertex, normal and index buffers
     m_amountOfVertices = initVertexBuffers();
 
-    // ------------------------------------------------------------
-    // Position attribute: layout(location = 0), vec3
-    // ------------------------------------------------------------
+    m_vao.release();
+}
 
+void Object::setShaders(QOpenGLShaderProgram *shaderProgramm){
+
+    Q_ASSERT(shaderProgramm != nullptr);
+
+    m_vao.bind();
     m_vertPosBuffer.bind();
 
     shaderProgramm->enableAttributeArray(0);
@@ -51,10 +52,6 @@ void Object::create(QOpenGLShaderProgram *shaderProgramm)
 
     m_vertPosBuffer.release();
 
-    // ------------------------------------------------------------
-    // Normal attribute: layout(location = 1), vec3
-    // ------------------------------------------------------------
-
     m_normalBuffer.bind();
 
     shaderProgramm->enableAttributeArray(1);
@@ -66,13 +63,13 @@ void Object::create(QOpenGLShaderProgram *shaderProgramm)
         0           // stride
         );
 
-    m_normalBuffer.release();
+    isShaderSet = true;
 
+    m_normalBuffer.release();
     m_vao.release();
 }
 
-
-void Object::destroy()
+Object::~Object()
 {
     if (m_indexBuffer.isCreated())
         m_indexBuffer.destroy();
@@ -87,18 +84,9 @@ void Object::destroy()
         m_vao.destroy();
 }
 
-
-void Object::render()
-{
-    drawBox();
-}
-
-
 void Object::drawBox()
 {
     m_vao.bind();
-
-    // Bind index buffer
     m_indexBuffer.bind();
 
     glDrawElements(

@@ -12,23 +12,32 @@ QT_END_NAMESPACE
 class Object
 {
 public:
-    Object();
+    Object() = delete;
+    Object(const QVector3D& size, const QVector3D& position);
+    ~Object();
 
-    void create(QOpenGLShaderProgram *shaderProgramm);
-    void destroy();
-    void render();
     void drawBox();
     int initVertexBuffers();
+    void setShaders(QOpenGLShaderProgram *shaderProgramm);
 
-    QOpenGLVertexArrayObject m_vao;
 
-    QOpenGLBuffer m_vertPosBuffer{QOpenGLBuffer::VertexBuffer};
-    QOpenGLBuffer m_normalBuffer{QOpenGLBuffer::VertexBuffer};
-    QOpenGLBuffer m_indexBuffer{QOpenGLBuffer::IndexBuffer};
+    QMatrix4x4 returnModelMatrix(){
+        return m_modelMatrix;
+    }
+    bool shadersSet() const { return isShaderSet; }
 
-    QMatrix4x4 m_modelMatrix;
 
-    int m_amountOfVertices = 0;
+private:
+    bool                        isShaderSet;
+    QOpenGLVertexArrayObject    m_vao;
+
+    QOpenGLBuffer               m_vertPosBuffer{QOpenGLBuffer::VertexBuffer};
+    QOpenGLBuffer               m_normalBuffer{QOpenGLBuffer::VertexBuffer};
+    QOpenGLBuffer               m_indexBuffer{QOpenGLBuffer::IndexBuffer};
+
+    QMatrix4x4                  m_modelMatrix;
+
+    int                         m_amountOfVertices = 0;
 };
 
 #endif // OBJECT_H

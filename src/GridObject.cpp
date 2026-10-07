@@ -15,7 +15,7 @@ License    : BSD License,
 #include <vector>
 
 
-void GridObject::create(QOpenGLShaderProgram * shaderProgramm) {
+GridObject::GridObject() : isShaderSet(false) {
     const unsigned int N = 20;
     float width = 600;
     std::vector<float>  gridVertexBufferData;
@@ -55,19 +55,12 @@ void GridObject::create(QOpenGLShaderProgram * shaderProgramm) {
 	int vertexMemSize = m_bufferSize*sizeof(float);
 	m_vbo.allocate(gridVertexBufferData.data(), vertexMemSize);
 
-	// layout(location = 0) = vec2 position
-    shaderProgramm->enableAttributeArray(0); // array with index/id 0
-	shaderProgramm->setAttributeBuffer(0, GL_FLOAT,
-								  0 /* position/vertex offset */,
-								  2 /* two floats per position = vec2 */,
-								  0 /* vertex after vertex, no interleaving */);
-
 	m_vao.release();
 	m_vbo.release();
 }
 
 
-void GridObject::destroy() {
+GridObject::~GridObject() {
 	m_vao.destroy();
 	m_vbo.destroy();
 }
@@ -78,4 +71,21 @@ void GridObject::render() {
 	// draw the grid lines, m_NVertexes = number of floats in buffer
     glDrawArrays(GL_LINES, 0, m_bufferSize);
 	m_vao.release();
+}
+
+void GridObject::setShaders(QOpenGLShaderProgram * shaderProgramm){
+
+    Q_ASSERT(shaderProgramm != nullptr);
+
+    m_vao.bind();
+    m_vbo.bind();
+
+    shaderProgramm->enableAttributeArray(0); // array with index/id 0
+    shaderProgramm->setAttributeBuffer(0, GL_FLOAT,
+                                       0 /* position/vertex offset */,
+                                       2 /* two floats per position = vec2 */,
+                                       0 /* vertex after vertex, no interleaving */);
+    isShaderSet = true;
+    m_vao.release();
+    m_vbo.release();
 }

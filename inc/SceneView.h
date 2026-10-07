@@ -68,8 +68,8 @@ private:
 	/*! All shader programs used in the scene. */
 	QList<ShaderProgram>		m_shaderPrograms;
 
-	GridObject					m_gridObject;
-    Object                      m_Object;
+    GridObject*					m_gridObject;
+    Object*                     m_Object;
 
 	QOpenGLTimeMonitor			m_gpuTimers;
 	QElapsedTimer				m_cpuTimer;

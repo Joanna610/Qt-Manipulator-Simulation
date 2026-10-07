@@ -54,10 +54,11 @@ SceneView::~SceneView() {
 		for (ShaderProgram & p : m_shaderPrograms)
 			p.destroy();
 
-		m_gridObject.destroy();
-
 		m_gpuTimers.destroy();
-	}
+
+        delete m_Object;
+        delete m_gridObject;
+    }
 }
 
 void SceneView::initializeGL() {
@@ -73,8 +74,14 @@ void SceneView::initializeGL() {
         glEnable(GL_DEPTH_TEST);
 
 		// initialize drawable objects
-		m_gridObject.create(SHADER(0));
-        m_Object.create(SHADER(1));
+        m_gridObject = new GridObject();
+        m_gridObject->setShaders(SHADER(0));
+
+        m_Object = new Object(QVector3D(50.0f, 50.0f, 50.0f), QVector3D(0.0f, 1.0f, 0.0f));
+        m_Object->setShaders(SHADER(1));
+
+        Q_ASSERT(m_gridObject->shadersSet());
+        Q_ASSERT(m_Object->shadersSet());
 
 		// Timer
 		m_gpuTimers.setSampleCount(3);
@@ -131,26 +138,24 @@ void SceneView::paintGL() {
 	SHADER(0)->setUniformValue(m_shaderPrograms[0].m_uniformIDs[1], gridColor);
 
 	m_gpuTimers.recordSample(); // render grid
-	m_gridObject.render();
+    m_gridObject->render();
 	SHADER(0)->release();
     SHADER(1)->bind();
 
-    QMatrix4x4 mvpMatrix =
-        m_worldToView * m_Object.m_modelMatrix;
+    QMatrix4x4 mvpMatrix = m_worldToView * m_Object->returnModelMatrix();
 
     SHADER(1)->setUniformValue(
         m_shaderPrograms[1].m_uniformIDs[0],
         mvpMatrix
         );
 
-    QMatrix4x4 normalMatrix =
-        m_Object.m_modelMatrix.inverted().transposed();
+    QMatrix4x4 normalMatrix = m_Object->returnModelMatrix().inverted().transposed();
 
     SHADER(1)->setUniformValue(
         m_shaderPrograms[1].m_uniformIDs[1],
         normalMatrix
         );
-    m_Object.drawBox();
+    m_Object->drawBox();
     SHADER(1)->release();
 
 	m_gpuTimers.recordSample(); // done painting
