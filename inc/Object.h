@@ -20,15 +20,10 @@ public:
     int initVertexBuffers();
     void setShaders(QOpenGLShaderProgram *shaderProgramm);
 
-
-    QMatrix4x4 returnModelMatrix(){
-        return m_modelMatrix;
-    }
-    bool shadersSet() const { return isShaderSet; }
+    QMatrix4x4 returnModelMatrix(){ return m_modelMatrix; }
 
 
 private:
-    bool                        isShaderSet;
     QOpenGLVertexArrayObject    m_vao;
 
     QOpenGLBuffer               m_vertPosBuffer{QOpenGLBuffer::VertexBuffer};

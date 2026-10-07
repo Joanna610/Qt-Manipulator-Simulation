@@ -1,3 +1,4 @@
+release/Drone.o
 release/GridObject.o
 release/KeyboardMouseHandler.o
 release/Object.o

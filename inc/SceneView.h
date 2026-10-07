@@ -21,7 +21,7 @@ License    : BSD License,
 #include "KeyboardMouseHandler.h"
 #include "GridObject.h"
 #include "Camera.h"
-#include "Object.h"
+#include "Drone.h"
 
 class SceneView : public OpenGLWindow {
 public:
@@ -69,7 +69,7 @@ private:
 	QList<ShaderProgram>		m_shaderPrograms;
 
     GridObject*					m_gridObject;
-    Object*                     m_Object;
+    Drone*                      m_Drone;
 
 	QOpenGLTimeMonitor			m_gpuTimers;
 	QElapsedTimer				m_cpuTimer;

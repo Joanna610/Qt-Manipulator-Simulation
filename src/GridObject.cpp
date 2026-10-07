@@ -15,7 +15,7 @@ License    : BSD License,
 #include <vector>
 
 
-GridObject::GridObject() : isShaderSet(false) {
+GridObject::GridObject() {
     const unsigned int N = 20;
     float width = 600;
     std::vector<float>  gridVertexBufferData;
@@ -59,12 +59,10 @@ GridObject::GridObject() : isShaderSet(false) {
 	m_vbo.release();
 }
 
-
 GridObject::~GridObject() {
 	m_vao.destroy();
 	m_vbo.destroy();
 }
-
 
 void GridObject::render() {
 	m_vao.bind();
@@ -73,7 +71,7 @@ void GridObject::render() {
 	m_vao.release();
 }
 
-void GridObject::setShaders(QOpenGLShaderProgram * shaderProgramm){
+bool GridObject::setShaders(QOpenGLShaderProgram * shaderProgramm){
 
     Q_ASSERT(shaderProgramm != nullptr);
 
@@ -85,7 +83,8 @@ void GridObject::setShaders(QOpenGLShaderProgram * shaderProgramm){
                                        0 /* position/vertex offset */,
                                        2 /* two floats per position = vec2 */,
                                        0 /* vertex after vertex, no interleaving */);
-    isShaderSet = true;
     m_vao.release();
     m_vbo.release();
+
+    return true;
 }

@@ -15,7 +15,7 @@ License    : BSD License,
 
 ************************************************************************************/
 
-Object::Object(const QVector3D& size, const QVector3D& position) : isShaderSet(false)
+Object::Object(const QVector3D& size, const QVector3D& position)
 {
     // Model transformation
     m_modelMatrix.setToIdentity();
@@ -63,25 +63,16 @@ void Object::setShaders(QOpenGLShaderProgram *shaderProgramm){
         0           // stride
         );
 
-    isShaderSet = true;
-
     m_normalBuffer.release();
     m_vao.release();
 }
 
 Object::~Object()
 {
-    if (m_indexBuffer.isCreated())
-        m_indexBuffer.destroy();
-
-    if (m_normalBuffer.isCreated())
-        m_normalBuffer.destroy();
-
-    if (m_vertPosBuffer.isCreated())
-        m_vertPosBuffer.destroy();
-
-    if (m_vao.isCreated())
-        m_vao.destroy();
+    m_indexBuffer.destroy();
+    m_normalBuffer.destroy();
+    m_vertPosBuffer.destroy();
+    m_vao.destroy();
 }
 
 void Object::drawBox()

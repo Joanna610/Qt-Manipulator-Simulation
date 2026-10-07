@@ -25,11 +25,9 @@ public:
     ~GridObject();
 
 	void render();
-    void setShaders(QOpenGLShaderProgram * shaderProgramm);
-    bool shadersSet() const {return isShaderSet;}
+    bool setShaders(QOpenGLShaderProgram * shaderProgramm);
 
 private:
-    bool                        isShaderSet;
 	unsigned int				m_bufferSize;
 
 	/*! Wraps an OpenGL VertexArrayObject, that references the vertex coordinates. */

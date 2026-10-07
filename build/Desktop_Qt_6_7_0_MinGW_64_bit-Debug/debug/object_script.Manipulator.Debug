@@ -1,3 +1,4 @@
+debug/Drone.o
 debug/GridObject.o
 debug/KeyboardMouseHandler.o
 debug/Object.o

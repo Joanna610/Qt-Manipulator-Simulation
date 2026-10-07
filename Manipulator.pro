@@ -41,6 +41,7 @@ win32 {
 }
 
 SOURCES += \
+        src\Drone.cpp \
         src\GridObject.cpp \
         src\KeyboardMouseHandler.cpp \
         src\Object.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
         src\main.cpp
 
 HEADERS += \
+        inc\Drone.h \
         inc\Camera.h \
         inc\DebugApplication.h \
         inc\GridObject.h \

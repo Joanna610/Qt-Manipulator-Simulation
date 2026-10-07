@@ -56,7 +56,7 @@ SceneView::~SceneView() {
 
 		m_gpuTimers.destroy();
 
-        delete m_Object;
+        delete m_Drone;
         delete m_gridObject;
     }
 }
@@ -75,13 +75,10 @@ void SceneView::initializeGL() {
 
 		// initialize drawable objects
         m_gridObject = new GridObject();
-        m_gridObject->setShaders(SHADER(0));
+        m_Drone = new Drone;
 
-        m_Object = new Object(QVector3D(50.0f, 50.0f, 50.0f), QVector3D(0.0f, 1.0f, 0.0f));
-        m_Object->setShaders(SHADER(1));
-
-        Q_ASSERT(m_gridObject->shadersSet());
-        Q_ASSERT(m_Object->shadersSet());
+        Q_ASSERT(m_gridObject->setShaders(SHADER(0)));
+        Q_ASSERT(m_Drone->setShaders(SHADER(1)));
 
 		// Timer
 		m_gpuTimers.setSampleCount(3);
@@ -142,20 +139,22 @@ void SceneView::paintGL() {
 	SHADER(0)->release();
     SHADER(1)->bind();
 
-    QMatrix4x4 mvpMatrix = m_worldToView * m_Object->returnModelMatrix();
+    std::vector<Matrices> matrices = m_Drone->setMatrices(m_worldToView);
+    for(const auto& matrix : matrices) {
 
-    SHADER(1)->setUniformValue(
-        m_shaderPrograms[1].m_uniformIDs[0],
-        mvpMatrix
-        );
+        SHADER(1)->setUniformValue(
+            m_shaderPrograms[1].m_uniformIDs[0],
+            matrix.mvpMatrix
+            );
 
-    QMatrix4x4 normalMatrix = m_Object->returnModelMatrix().inverted().transposed();
+        SHADER(1)->setUniformValue(
+            m_shaderPrograms[1].m_uniformIDs[1],
+            matrix.normalMatrix
+            );
+    }
 
-    SHADER(1)->setUniformValue(
-        m_shaderPrograms[1].m_uniformIDs[1],
-        normalMatrix
-        );
-    m_Object->drawBox();
+    m_Drone->drawDrone();
+
     SHADER(1)->release();
 
 	m_gpuTimers.recordSample(); // done painting
@@ -229,10 +228,12 @@ void SceneView::checkInput() {
 		}
 	}
 	// has the left mouse butten been release
-    if (m_keyboardMouseHandler.buttonReleased(Qt::RightButton)) {
-		m_inputEventReceived = true;
-		renderLater();
-		return;
+    if (m_keyboardMouseHandler.buttonDown(Qt::RightButton)) {
+        if (m_keyboardMouseHandler.mouseDownPos() != QCursor::pos()) {
+            m_inputEventReceived = true;
+            renderLater();
+            return;
+        }
 	}
 
 	// scroll-wheel turned?
@@ -250,14 +251,24 @@ void SceneView::processInput() {
 	m_inputEventReceived = false;
 
 	// check for trigger key
-    if (m_keyboardMouseHandler.buttonDown(Qt::LeftButton)) {
+    if (m_keyboardMouseHandler.buttonDown(Qt::RightButton)) {
 		QPoint mouseDelta = m_keyboardMouseHandler.resetMouseDelta(QCursor::pos()); // resets the internal position
         static const float rotatationSpeed  = 0.2f;
 		const QVector3D LocalUp(0.0f, 1.0f, 0.0f); // same as in Camera::up()
         m_camera.rotate(rotatationSpeed * mouseDelta.x(), LocalUp);
         m_camera.rotate(rotatationSpeed * mouseDelta.y(), m_camera.right());
-
 	}
+
+    if (m_keyboardMouseHandler.buttonDown(Qt::LeftButton)) {
+        QPoint mouseDelta = m_keyboardMouseHandler.resetMouseDelta(QCursor::pos()); // resets the internal position
+        static const float translationSpeed  = 0.8f;
+        const QVector3D LocalUp(0.0f, 1.0f, 0.0f);
+        QVector3D translation =
+            -translationSpeed * mouseDelta.x() * m_camera.right()
+            + translationSpeed * mouseDelta.y() * LocalUp;
+
+        m_camera.translate(translation);
+    }
 
 	int wheelDelta = m_keyboardMouseHandler.resetWheelDelta();
 	if (wheelDelta != 0) {
@@ -266,11 +277,6 @@ void SceneView::processInput() {
 			transSpeed = 0.8f;
 		m_camera.translate(wheelDelta * transSpeed * m_camera.forward());
 	}
-
-	// check for picking operation
-    if (m_keyboardMouseHandler.buttonReleased(Qt::RightButton)) {
-//		pick(m_keyboardMouseHandler.mouseReleasePos());
-    }
 
 	// finally, reset "WasPressed" key states
 	m_keyboardMouseHandler.clearWasPressedKeyStates();
