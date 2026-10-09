@@ -15,23 +15,27 @@ License    : BSD License,
 
 ************************************************************************************/
 
-Object::Object(const QVector3D& size, const QVector3D& position)
+Object::Object(const QVector3D& size,
+               const QVector3D& position,
+               int rotationDirection,
+               const QVector3D& rotation)
 {
     // Model transformation
-    m_modelMatrix.setToIdentity();
+    this->m_modelMatrix.setToIdentity();
 
     // The camera is quite far away, so make the cube large for testing.
-    m_modelMatrix.scale(size);
-    m_modelMatrix.translate(position);
+    this->m_modelMatrix.translate(position);
+    this->m_modelMatrix.rotate(rotationDirection, rotation);
+    this->m_modelMatrix.scale(size);
 
     // Create Vertex Array Object
-    m_vao.create();
-    m_vao.bind();
+    this->m_vao.create();
+    this->m_vao.bind();
 
     // Create vertex, normal and index buffers
-    m_amountOfVertices = initVertexBuffers();
+    this->m_amountOfVertices = initVertexBuffers();
 
-    m_vao.release();
+    this->m_vao.release();
 }
 
 void Object::setShaders(QOpenGLShaderProgram *shaderProgramm){
@@ -75,7 +79,7 @@ Object::~Object()
     m_vao.destroy();
 }
 
-void Object::drawBox()
+void Object::drawObject()
 {
     m_vao.bind();
     m_indexBuffer.bind();
@@ -88,7 +92,6 @@ void Object::drawBox()
         );
 
     m_indexBuffer.release();
-
     m_vao.release();
 }
 

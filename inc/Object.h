@@ -13,15 +13,17 @@ class Object
 {
 public:
     Object() = delete;
-    Object(const QVector3D& size, const QVector3D& position);
+    Object(const QVector3D& size,
+           const QVector3D& position,
+           int rotationDirection = 0,
+           const QVector3D& rotation = QVector3D(0.0f, 1.0f, 0.0f));
     ~Object();
 
-    void drawBox();
+    void drawObject();
     int initVertexBuffers();
     void setShaders(QOpenGLShaderProgram *shaderProgramm);
 
     QMatrix4x4 returnModelMatrix(){ return m_modelMatrix; }
-
 
 private:
     QOpenGLVertexArrayObject    m_vao;

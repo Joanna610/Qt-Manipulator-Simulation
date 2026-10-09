@@ -1,19 +1,11 @@
 #version 330 core
 
-in vec3 vNormal;
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
 
+in vec4 vColor;
 out vec4 fragColor;
-
 void main()
 {
-    vec3 lightDirection = normalize(vec3(1.0, 1.0, 1.0));
-
-    float diffuse = max(
-        dot(normalize(vNormal), lightDirection),
-        0.0
-    );
-
-    vec3 baseColor = vec3(0.2, 0.6, 1.0);
-
-    fragColor = vec4(baseColor * diffuse, 1.0);
+    fragColor = vColor;
 }

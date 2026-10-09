@@ -137,23 +137,26 @@ void SceneView::paintGL() {
 	m_gpuTimers.recordSample(); // render grid
     m_gridObject->render();
 	SHADER(0)->release();
-    SHADER(1)->bind();
 
+    SHADER(1)->bind();
     std::vector<Matrices> matrices = m_Drone->setMatrices(m_worldToView);
-    for(const auto& matrix : matrices) {
+
+    for(auto i = 0; i < matrices.size(); ++i) {
 
         SHADER(1)->setUniformValue(
             m_shaderPrograms[1].m_uniformIDs[0],
-            matrix.mvpMatrix
+            matrices[i].mvpMatrix
             );
 
         SHADER(1)->setUniformValue(
             m_shaderPrograms[1].m_uniformIDs[1],
-            matrix.normalMatrix
+            matrices[i].normalMatrix
             );
+
+        m_Drone->drawElement(i);
     }
 
-    m_Drone->drawDrone();
+
 
     SHADER(1)->release();
 
@@ -261,7 +264,7 @@ void SceneView::processInput() {
 
     if (m_keyboardMouseHandler.buttonDown(Qt::LeftButton)) {
         QPoint mouseDelta = m_keyboardMouseHandler.resetMouseDelta(QCursor::pos()); // resets the internal position
-        static const float translationSpeed  = 0.8f;
+        static const float translationSpeed  = 1.0f;
         const QVector3D LocalUp(0.0f, 1.0f, 0.0f);
         QVector3D translation =
             -translationSpeed * mouseDelta.x() * m_camera.right()
@@ -272,9 +275,9 @@ void SceneView::processInput() {
 
 	int wheelDelta = m_keyboardMouseHandler.resetWheelDelta();
 	if (wheelDelta != 0) {
-		float transSpeed = 8.f;
+        float transSpeed = 20.0f;
 		if (m_keyboardMouseHandler.keyDown(Qt::Key_Shift))
-			transSpeed = 0.8f;
+            transSpeed = 20.0f;
 		m_camera.translate(wheelDelta * transSpeed * m_camera.forward());
 	}
 

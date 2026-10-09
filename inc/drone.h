@@ -4,7 +4,7 @@
 #include <QMatrix4x4>
 #include <vector>
 
-#include "Object.h"
+#include "inc/Object.h"
 
 struct Matrices{
     QMatrix4x4 mvpMatrix;
@@ -19,7 +19,7 @@ public:
 
     bool setShaders(QOpenGLShaderProgram *shaderProgramm);
     std::vector<Matrices> setMatrices(const QMatrix4x4& worldToView) const;
-    void drawDrone() const;
+    void drawElement(const int & index) const;
 
 private:
     std::vector<std::unique_ptr<Object>>          m_objects;

@@ -3,12 +3,112 @@
 #include <memory>
 
 Drone::Drone() {
-    // Corpse = std::make_unique<Object>(QVector3D(50.0f, 50.0f, 50.0f),
-    //                                   QVector3D(0.0f, 1.0f, 0.0f));
 
     m_objects.push_back(
-        std::make_unique<Object>(QVector3D(50.0f, 50.0f, 50.0f),
-                                 QVector3D(0.0f, 1.0f, 0.0f))
+        std::make_unique<Object>(QVector3D(70.0f, 20.0f, 50.0f),
+                                 QVector3D(0.0f, 20.0f, 0.0f))
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 40.0f),
+                                 QVector3D(70.0f, 45.0f, -50.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 10.0f),
+                                 QVector3D(90.0f, 55.0f, -70.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 2.5f, 60.0f),
+                                 QVector3D(90.0f, 60.0f, -70.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 40.0f),
+                                 QVector3D(70.0f, 45.0f, 50.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 10.0f),
+                                 QVector3D(90.0f, 55.0f, 70.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 2.5f, 60.0f),
+                                 QVector3D(90.0f, 60.0f, 70.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 40.0f),
+                                 QVector3D(-70.0f, 45.0f, -50.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 10.0f),
+                                 QVector3D(-90.0f, 55.0f, -70.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 2.5f, 60.0f),
+                                 QVector3D(-90.0f, 60.0f, -70.0f),
+                                 45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 40.0f),
+                                 QVector3D(-70.0f, 45.0f, 50.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 5.0f, 10.0f),
+                                 QVector3D(-90.0f, 55.0f, 70.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
+        );
+
+    m_objects.push_back(
+        std::make_unique<Object>(QVector3D(10.0f, 2.5f, 60.0f),
+                                 QVector3D(-90.0f, 60.0f, 70.0f),
+                                 -45,
+                                 QVector3D(0.0f, 1.0f, 0.0f)
+                                 )
         );
 }
 
@@ -31,7 +131,6 @@ std::vector<Matrices> Drone::setMatrices(const QMatrix4x4& worldToView) const{
     return listOfMatrices;
 }
 
-void Drone::drawDrone() const{
-    for(auto& object : m_objects)
-        object->drawBox();
+void Drone::drawElement(const int & index) const{
+    this->m_objects[index]->drawObject();
 }
