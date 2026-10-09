@@ -10,5 +10,6 @@ release/TestDialog.o
 release/Transform3D.o
 release/main.o
 release/qrc_resources.o
+release/moc_Object.o
 release/moc_OpenGLWindow.o
 release/moc_TestDialog.o

@@ -45,6 +45,17 @@ SceneView::SceneView() :
 	// look slightly left
     m_camera.rotate(-40, QVector3D(0.0f, 1.0f, 0.0f));
 
+    connect(&m_timer, &QTimer::timeout, this, [this]() {
+        // float m_rotationAngle += 1.0f; // increase angle (in degrees)
+        // if (m_rotationAngle >= 360.f) m_rotationAngle -= 360.f;
+
+        // m_modelMatrix.setToIdentity();
+        // m_modelMatrix.rotate(m_rotationAngle, QVector3D(0.f, 1.f, 0.f));
+        m_Drone->startPropellers();
+
+        renderLater();
+    });
+
 }
 
 SceneView::~SceneView() {
@@ -83,6 +94,8 @@ void SceneView::initializeGL() {
 		// Timer
 		m_gpuTimers.setSampleCount(3);
 		m_gpuTimers.create();
+
+
 	}
 	catch (OpenGLException & ex) {
 		throw OpenGLException(ex, "OpenGL initialization failed.", FUNC_ID);
@@ -157,7 +170,6 @@ void SceneView::paintGL() {
     }
 
 
-
     SHADER(1)->release();
 
 	m_gpuTimers.recordSample(); // done painting
@@ -180,6 +192,8 @@ void SceneView::paintGL() {
 
 	qint64 elapsedMs = m_cpuTimer.elapsed();
     qDebug() << "Total paintGL time: " << elapsedMs << "ms\n";
+
+    // startDrone(true);
 }
 
 
@@ -298,3 +312,15 @@ void SceneView::updateWorld2ViewMatrix() {
 }
 
 
+void SceneView::startDrone(bool connection){
+    if(connection){
+        if (!m_timer.isActive())
+        {
+
+
+
+        m_timer.start(16);
+        }
+    }
+    else m_timer.stop();
+}

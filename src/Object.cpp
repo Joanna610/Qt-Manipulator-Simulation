@@ -18,15 +18,15 @@ License    : BSD License,
 Object::Object(const QVector3D& size,
                const QVector3D& position,
                int rotationDirection,
-               const QVector3D& rotation)
+               const QVector3D& rotation) : m_position(position), m_size(size)
 {
     // Model transformation
     this->m_modelMatrix.setToIdentity();
 
     // The camera is quite far away, so make the cube large for testing.
-    this->m_modelMatrix.translate(position);
+    this->m_modelMatrix.translate(m_position);
     this->m_modelMatrix.rotate(rotationDirection, rotation);
-    this->m_modelMatrix.scale(size);
+    this->m_modelMatrix.scale(m_size);
 
     // Create Vertex Array Object
     this->m_vao.create();
@@ -266,5 +266,31 @@ int Object::initVertexBuffers()
         sizeof(indices) / sizeof(indices[0]);
 
     return amountOfVertices;
+}
+
+void Object::rotateObject(){
+    m_rotationAngle += 1.0f; // increase angle (in degrees)
+    if (m_rotationAngle >= 360.f) m_rotationAngle -= 360.f;
+
+    m_modelMatrix.setToIdentity();
+    m_modelMatrix.translate(m_position);
+    m_modelMatrix.rotate(
+        m_rotationAngle,
+        QVector3D(0.0f, 1.0f, 0.0f)
+        );
+    m_modelMatrix.scale(m_size);
+}
+
+
+void Object::translateObject(){
+
+    m_position += QVector3D(0.0f, 1.0f, 0.0f);
+    m_modelMatrix.setToIdentity();
+    m_modelMatrix.translate(m_position);
+    m_modelMatrix.rotate(
+        m_rotationAngle,
+        QVector3D(0.0f, 1.0f, 0.0f)
+        );
+    m_modelMatrix.scale(m_size);
 }
 

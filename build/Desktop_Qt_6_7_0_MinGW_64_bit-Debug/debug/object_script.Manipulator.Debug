@@ -10,5 +10,6 @@ debug/TestDialog.o
 debug/Transform3D.o
 debug/main.o
 debug/qrc_resources.o
+debug/moc_Object.o
 debug/moc_OpenGLWindow.o
 debug/moc_TestDialog.o

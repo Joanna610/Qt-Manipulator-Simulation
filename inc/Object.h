@@ -5,6 +5,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QMatrix4x4>
 
+
+
 QT_BEGIN_NAMESPACE
 class QOpenGLShaderProgram;
 QT_END_NAMESPACE
@@ -22,10 +24,16 @@ public:
     void drawObject();
     int initVertexBuffers();
     void setShaders(QOpenGLShaderProgram *shaderProgramm);
+    void translateObject();
+    void rotateObject();
 
     QMatrix4x4 returnModelMatrix(){ return m_modelMatrix; }
 
 private:
+
+    QVector3D                   m_position;
+    QVector3D                   m_size;
+
     QOpenGLVertexArrayObject    m_vao;
 
     QOpenGLBuffer               m_vertPosBuffer{QOpenGLBuffer::VertexBuffer};
@@ -34,6 +42,7 @@ private:
 
     QMatrix4x4                  m_modelMatrix;
 
+    float                       m_rotationAngle = 0.0f;
     int                         m_amountOfVertices = 0;
 };
 

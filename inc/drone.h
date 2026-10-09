@@ -3,6 +3,7 @@
 
 #include <QMatrix4x4>
 #include <vector>
+#include <iterator>
 
 #include "inc/Object.h"
 
@@ -20,9 +21,11 @@ public:
     bool setShaders(QOpenGLShaderProgram *shaderProgramm);
     std::vector<Matrices> setMatrices(const QMatrix4x4& worldToView) const;
     void drawElement(const int & index) const;
+    void startPropellers();
+    void moveDrone();
 
 private:
-    std::vector<std::unique_ptr<Object>>          m_objects;
+    std::unordered_map<std::string, std::unique_ptr<Object>>          m_objects;
 };
 
 #endif // DRONE_H

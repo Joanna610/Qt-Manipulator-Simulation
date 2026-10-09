@@ -15,6 +15,7 @@ License    : BSD License,
 #include <QMatrix4x4>
 #include <QOpenGLTimeMonitor>
 #include <QElapsedTimer>
+#include <QTimer>
 
 #include "OpenGLWindow.h"
 #include "ShaderProgram.h"
@@ -41,7 +42,12 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event) override;
 	void wheelEvent(QWheelEvent *event) override;
 
+
+    void startDrone(bool connection);
+
 private:
+
+        QTimer                      m_timer;
 	/*! Tests, if any relevant input was received and registers a state change. */
 	void checkInput();
 
